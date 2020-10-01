@@ -8,27 +8,24 @@ namespace SistemaEleicao.Models.Entities
     {
         [Key]
         [Column("cod_voto", TypeName = "NUMERIC(10)")]
-        public int CodVoto { get; set; }
+        public decimal CodVoto { get; set; }
 
         [ForeignKey("usuario")]
         [Required]
         [Column("cod_usuario", TypeName = "NUMERIC(10)")]
-        public int CodUsuario { get; set; }
+        public decimal CodUsuario { get; set; }
 
         [ForeignKey("cargo")]
-        [Required]
         [Column("cod_cargo", TypeName = "NUMERIC(10)")]
-        public string CodCargo { get; set; }
+        public decimal CodCargo { get; set; }
 
         [ForeignKey("candidato")]
-        [Required]
         [Column("cod_candidato", TypeName = "NUMERIC(10)")]
-        public string CodCandidato { get; set; }
+        public decimal CodCandidato { get; set; }
 
         [ForeignKey("eleicao")]
-        [Required]
         [Column("cod_eleicao", TypeName = "NUMERIC(10)")]
-        public string CodEleicao { get; set; }
+        public decimal CodEleicao { get; set; }
 
     }
 }

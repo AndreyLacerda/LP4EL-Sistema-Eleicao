@@ -9,18 +9,15 @@ namespace SistemaEleicao.Models.Entities
 
         [Key]
         [Column("cod_candidato", TypeName = "NUMERIC(10)")]
-        public int CodCandidato { get; set; }
+        public decimal CodCandidato { get; set; }
 
         [ForeignKey("eleicao")]
-        [Required]
         [Column("cod_eleicao", TypeName = "NUMERIC(10)")]
-        public int CodEleicao { get; set; }
+        public decimal CodEleicao { get; set; }
 
-        [Required]
         [Column("nome", TypeName = "VARCHAR(50)")]
         public string Nome { get; set; }
 
-        [Required]
         [Column("imagem", TypeName = "VARCHAR(255)")]
         public string Imagem { get; set; }
 

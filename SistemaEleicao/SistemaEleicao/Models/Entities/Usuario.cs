@@ -6,20 +6,27 @@ namespace SistemaEleicao.Models.Entities
     [Table("usuario")]
     public class Usuario
     {
+        public Usuario()
+        {
+        }
+
+        public Usuario(string email, string nome, string senha)
+        {
+            Email = email;
+            Nome = nome;
+            Senha = senha;
+        }
 
         [Key]
         [Column("cod_usuario", TypeName = "NUMERIC(10)")]
-        public int CodUsuario { get; set; }
+        public decimal CodUsuario { get; set; }
 
-        [Required]
         [Column("email", TypeName = "VARCHAR(100)")]
         public string Email { get; set; }
 
-        [Required]
         [Column("nome", TypeName = "VARCHAR(100)")]
         public string Nome { get; set; }
 
-        [Required]
         [Column("senha", TypeName = "VARCHAR(100)")]
         public string Senha { get; set; }
 

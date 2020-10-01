@@ -9,20 +9,18 @@ namespace SistemaEleicao.Models.Entities
         [Key]
         [ForeignKey("usuario")]
         [Column("cod_usuario", Order = 1, TypeName = "NUMERIC(10)")]
-        public int CodUsuario { get; set; }
+        public decimal CodUsuario { get; set; }
 
         [Key]
         [ForeignKey("eleicao")]
         [Column("cod_eleicao", TypeName = "NUMERIC(10)", Order = 2)]
-        public string CodEleicao { get; set; }
+        public decimal CodEleicao { get; set; }
 
-        [Required]
         [Column("organizador", TypeName = "BOOLEAN")]
-        public string Organizador { get; set; }
+        public bool Organizador { get; set; }
 
-        [Required]
         [Column("voto_concluido", TypeName = "BOOLEAN")]
-        public string VotoConcluido { get; set; }
+        public bool VotoConcluido { get; set; }
 
     }
 }

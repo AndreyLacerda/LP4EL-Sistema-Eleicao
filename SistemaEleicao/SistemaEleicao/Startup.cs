@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using SistemaEleicao.Data.Contexts;
+using System;
 
 namespace SistemaEleicao
 {
@@ -21,6 +22,11 @@ namespace SistemaEleicao
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            services.AddDistributedMemoryCache();
+            services.AddSession(options => {
+                options.IdleTimeout = TimeSpan.FromMinutes(60);//You can set Time   
+            });
 
             services.AddEntityFrameworkNpgsql()
                 .AddDbContext<AppDbContext>(options =>
@@ -47,6 +53,8 @@ namespace SistemaEleicao
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {
