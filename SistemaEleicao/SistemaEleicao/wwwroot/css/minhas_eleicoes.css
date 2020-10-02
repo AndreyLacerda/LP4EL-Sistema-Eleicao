@@ -1,0 +1,21 @@
+﻿.boxes {
+    margin-left: 20%;
+    display: table;
+}
+
+.boxes div {
+    float: left;
+}
+
+.column2 {
+    margin-left: 250px;
+}
+
+.botao-criar {
+    margin-top: .5rem;
+    margin-bottom: 1rem;
+}
+
+.sem-votacao {
+    margin-top: 5%;
+}
