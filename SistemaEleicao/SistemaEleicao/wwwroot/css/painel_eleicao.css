@@ -1,0 +1,35 @@
+﻿.status-buttons {
+    margin-top: 1rem;
+}
+
+.edit-delete {
+    transform: translateY(-2.3rem);
+}
+
+.boxes {
+    margin-left: 3rem;
+    display: table;
+    margin-right: 0;
+}
+
+    .boxes div {
+        float: left;
+    }
+
+.column2 {
+    margin-left: 500px;
+}
+
+.candidatos-header {
+    margin-top: 2rem;
+}
+
+.candidatos-cards {
+    display: table;
+}
+
+    .candidatos-cards div {
+        float: left;
+        margin-top: 1rem;
+        margin-left: 4rem;
+    }

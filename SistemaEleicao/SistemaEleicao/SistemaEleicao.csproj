@@ -5,9 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\Enum\**" />
     <Compile Remove="Views\NovaPasta1\**" />
+    <Content Remove="Models\Enum\**" />
     <Content Remove="Views\NovaPasta1\**" />
+    <EmbeddedResource Remove="Models\Enum\**" />
     <EmbeddedResource Remove="Views\NovaPasta1\**" />
+    <None Remove="Models\Enum\**" />
     <None Remove="Views\NovaPasta1\**" />
   </ItemGroup>
 

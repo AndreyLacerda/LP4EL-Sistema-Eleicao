@@ -30,7 +30,7 @@
 
         <div class="form-group">
             @Html.LabelFor(model => model.Email, "E-mail*")
-            @Html.TextBoxFor(model => model.Email, new { @class = "form-control", @placeholder = "jose@carlos.com", @type = "email", @maxlength = "100" })
+            @Html.TextBoxFor(model => model.Email, new { @class = "form-control", @placeholder = "E-mail", @type = "email", @maxlength = "100" })
             @Html.ValidationMessageFor(model => model.Email)
         </div>
         <div class="form-group">
