@@ -48,7 +48,7 @@ namespace SistemaEleicao.Controllers
                     _db.Eleicoes.Add(eleicao);
                     _db.UsuarioEleicoes.Add(usuario_x_eleicao);
                     _db.SaveChanges();
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("PainelEleicao", "PainelEleicao", new { id = eleicao.CodEleicao });
                 }
                 ViewBag.MensagemErro = "Este título já está em uso.";
                 return View("CriacaoVotacao");
