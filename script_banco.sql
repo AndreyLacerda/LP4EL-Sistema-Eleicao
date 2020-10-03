@@ -7,15 +7,13 @@ CREATE TABLE usuario (
 
 CREATE SEQUENCE seq_usuario;
 
-create type status_eleicao_t as enum('I','F','P'); --Iniciada(I), Finalizada(F), Preparação(P);
-
 CREATE TABLE eleicao (
 	cod_eleicao	NUMERIC(10) PRIMARY KEY,
 	titulo	VARCHAR(100) NOT NULL,
 	descricao	VARCHAR(500) NOT NULL,
 	chave_acesso	VARCHAR(160) NOT NULL,
 	voto_multiplo	BOOLEAN NOT NULL,
-	status	status_eleicao_t NOT NULL
+	status CHAR(1) NOT NULL
 );
 
 CREATE SEQUENCE seq_eleicao;

@@ -29,12 +29,12 @@
         
         <div class="form-group">
             @Html.LabelFor(model => model.Email, "E-mail*")
-            @Html.TextBoxFor(model => model.Email, new { @class = "form-control", @placeholder = "jose@carlos.com", @type = "email", @maxlength = "100" })
+            @Html.TextBoxFor(model => model.Email, new { @class = "form-control", @placeholder = "E-mail", @type = "email", @maxlength = "100" })
             @Html.ValidationMessageFor(model => model.Email)
         </div>
         <div class="form-group">
             @Html.LabelFor(model => model.Nome, "Nome*")
-            @Html.TextBoxFor(model => model.Nome, new { @class = "form-control", @placeholder = "José Carlos", @maxlength = "100" })
+            @Html.TextBoxFor(model => model.Nome, new { @class = "form-control", @placeholder = "Nome Completo", @maxlength = "100" })
             @Html.ValidationMessageFor(model => model.Nome)
         </div>
         <div class="form-group">
