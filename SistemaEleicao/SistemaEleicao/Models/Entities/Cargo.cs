@@ -21,7 +21,7 @@ namespace SistemaEleicao.Models.Entities
         public string Descricao { get; set; }
 
         [Column("quant_votos", TypeName = "INT")]
-        public bool QuantVotos { get; set; }
+        public int QuantVotos { get; set; }
 
     }
 }

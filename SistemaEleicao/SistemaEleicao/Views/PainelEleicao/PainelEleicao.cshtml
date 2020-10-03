@@ -1,4 +1,5 @@
-﻿@model SistemaEleicao.Models.Entities.Eleicao
+﻿@model SistemaEleicao.Models.PageModels.EleicaoPainel
+
 @{
     ViewData["Title"] = "Painel";
 }
@@ -61,111 +62,104 @@
 <div class="text-center">
     <h4>Cargos</h4>
 </div>
-<div class="accordion" id="accordionExample">
-    <div class="card">
-        <div class="card-header" id="heading1">
-            <h2 class="mb-0">
-                <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse-1" aria-expanded="true" aria-controls="collapse-1">
-                    Presidente
-                </button>
-            </h2>
-        </div>
-
-        <div id="collapse-1" class="collapse" aria-labelledby="heading-1" data-parent="#accordionExample">
-            <div class="card-body">
-                <div class="boxes">
-                    <div class="column1 text-md-center">
-                        <b>Quantidade de votos permitidos:</b> 2
-                    </div>
-                    <div class="column2">
-                        <a href="" type="button" class="btn btn-outline-info">
-                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-pencil-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
-                            </svg>
-                            Editar
-                        </a>
-                        <a href="" type="button" class="btn btn-outline-danger">
-                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-x-circle-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z" />
-                            </svg>
-                            Excluir
-                        </a>
-                    </div>
+<div class="text-right criar-cargo">
+    <a type="button" class="btn btn-outline-success" href="@Url.Action("CriarCargo", "Cargo", new { id = Model.CodEleicao })">
+        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus-circle-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
+        </svg>
+        Registrar novo cargo
+    </a>
+</div>
+@if (Model.Cargos.Count() == 0)
+{
+    <div class="text-center">
+        <h3>
+            <small class="text-muted">Esta votação ainda não possui cargos.</small>
+        </h3>
+    </div>
+}
+else
+{
+    <div class="accordion" id="accordionExample">
+        @foreach (var cargo in Model.Cargos)
+        {
+            <div class="card">
+                <div class="card-header" id="heading-@cargo.CodCargo">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse-@cargo.CodCargo" aria-expanded="true" aria-controls="collapse-@cargo.CodCargo">
+                            @cargo.Nome
+                        </button>
+                    </h2>
                 </div>
-                <br>
-                <div>
-                    <b>Descrição:</b> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing eli
+
+                <div id="collapse-@cargo.CodCargo" class="collapse" aria-labelledby="heading-@cargo.CodCargo" data-parent="#accordionExample">
+                    <div class="card-body">
+                        <div class="boxes">
+                            <div class="column1 text-md-center">
+                                <b>Quantidade de votos permitidos:</b> @cargo.QuantVotos
+                            </div>
+                            <div class="column2">
+                                <a type="button" class="btn btn-outline-info" href="@Url.Action("EditarCargo", "Cargo", new { id = Model.CodEleicao, cargoId = cargo.CodCargo })">
+                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-pencil-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
+                                    </svg>
+                                    Editar
+                                </a>
+                                <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#delete-cargo-modal" data-cargonome="@cargo.Nome" data-cargoid="@cargo.CodCargo" data-id="@Model.CodEleicao">
+                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-x-circle-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z" />
+                                    </svg>
+                                    Excluir
+                                </button>
+                            </div>
+                        </div>
+                        <br>
+                        <div>
+                            <b>Descrição:</b> @cargo.Descricao
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+        }
     </div>
-</div>
-
+}
 <div class="text-center candidatos-header">
     <h4>Candidatos</h4>
 </div>
-<div class="candidatos-cards">
-    <div class="card" style="width: 18rem;">
-        <img src="..." class="card-img-top" alt="...">
-        <div class="card-body">
-            <h5 class="card-title">Dilma</h5>
-            <h6 class="card-subtitle mb-2 text-muted">PT - Partido do Trabalhador</h6>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="btn btn-info">Editar</a>
-            <a href="#" class="btn btn-danger">Excluir</a>
-        </div>
-    </div>
-    <div class="card" style="width: 18rem;">
-        <img src="..." class="card-img-top" alt="...">
-        <div class="card-body">
-            <h5 class="card-title">Lula</h5>
-            <h6 class="card-subtitle mb-2 text-muted">PT - Partido do Trabalhador</h6>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="btn btn-info">Editar</a>
-            <a href="#" class="btn btn-danger">Excluir</a>
-        </div>
-    </div>
-    <div class="card" style="width: 18rem;">
-        <img src="..." class="card-img-top" alt="...">
-        <div class="card-body">
-            <h5 class="card-title">Dilma</h5>
-            <h6 class="card-subtitle mb-2 text-muted">PT - Partido do Trabalhador</h6>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="btn btn-info">Editar</a>
-            <a href="#" class="btn btn-danger">Excluir</a>
-        </div>
-    </div>
-    <div class="card" style="width: 18rem;">
-        <img src="..." class="card-img-top" alt="...">
-        <div class="card-body">
-            <h5 class="card-title">Lula</h5>
-            <h6 class="card-subtitle mb-2 text-muted">PT - Partido do Trabalhador</h6>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="btn btn-info">Editar</a>
-            <a href="#" class="btn btn-danger">Excluir</a>
-        </div>
-    </div>
-    <div class="card" style="width: 18rem;">
-        <img src="..." class="card-img-top" alt="...">
-        <div class="card-body">
-            <h5 class="card-title">Dilma</h5>
-            <h6 class="card-subtitle mb-2 text-muted">PT - Partido do Trabalhador</h6>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="btn btn-info">Editar</a>
-            <a href="#" class="btn btn-danger">Excluir</a>
-        </div>
-    </div>
-    <div class="card" style="width: 18rem;">
-        <img src="..." class="card-img-top" alt="...">
-        <div class="card-body">
-            <h5 class="card-title">Lula</h5>
-            <h6 class="card-subtitle mb-2 text-muted">PT - Partido do Trabalhador</h6>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="btn btn-info">Editar</a>
-            <a href="#" class="btn btn-danger">Excluir</a>
-        </div>
-    </div>
+<div class="text-right criar-candidato">
+    <a type="button" class="btn btn-outline-success" asp-area="" asp-controller="CriacaoVotacao" asp-action="CriacaoVotacao">
+        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus-circle-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
+        </svg>
+        Registrar novo candidato
+    </a>
 </div>
+@if (Model.Candidatos.Count() == 0)
+{
+    <div class="text-center">
+        <h3>
+            <small class="text-muted">Esta votação ainda não possui candidatos.</small>
+        </h3>
+    </div>
+}
+else
+{
+    <div class="candidatos-cards">
+        @foreach (var candidato in Model.Candidatos)
+        {
+            <div class="card" style="width: 18rem;">
+                <img src="@candidato.Imagem" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">@candidato.Nome</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">@candidato.GrupoPartido</h6>
+                    <p class="card-text">@candidato.Descricao</p>
+                    <a href="#" class="btn btn-info">Editar</a>
+                    <a href="#" class="btn btn-danger">Excluir</a>
+                </div>
+            </div>
+        }
+    </div>
+}
 
 <!-- Modal Delete -->
 <div class="modal fade" id="delete-modal" tabindex="-1" aria-labelledby="delete-modal" aria-hidden="true">
@@ -203,6 +197,27 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                 <a type="button" class="btn btn-primary" href="@Url.Action("AlterarStatus", "PainelEleicao", new { id = Model.CodEleicao, status =  Model.Status })">Alterar Status</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Delete Cargo -->
+<div class="modal fade" id="delete-cargo-modal" tabindex="-1" aria-labelledby="delete-cargo-modal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Excluir Cargo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Você tem certeza que deseja excluir este cargo?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <a type="button" class="btn btn-primary" href="@Url.Action("ExcluirEleicao", "PainelEleicao", new { id = Model.CodEleicao })">Excluir</a>
             </div>
         </div>
     </div>

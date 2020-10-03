@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SistemaEleicao.Data.Contexts;
 using SistemaEleicao.Models.Entities;
+using SistemaEleicao.Models.PageModels;
 
 namespace SistemaEleicao.Controllers
 {
@@ -28,7 +29,12 @@ namespace SistemaEleicao.Controllers
                                             idUser + "' and cod_eleicao = " + id + " and organizador = true)");
                 if (eleicao.Count() > 0)
                 {
-                    return View(eleicao.First());
+                    EleicaoPainel eleicaoPainel = new EleicaoPainel(eleicao.First());
+                    var cargos = _db.Cargos.Where(c => c.CodEleicao.Equals(eleicaoPainel.CodEleicao)).ToList();
+                    var candidatos = _db.Candidatos.Where(c => c.CodEleicao.Equals(eleicaoPainel.CodEleicao)).ToList();
+                    eleicaoPainel.Cargos = cargos;
+                    eleicaoPainel.Candidatos = candidatos;
+                    return View(eleicaoPainel);
                 }
             }
             return RedirectToAction("Login", "Home");

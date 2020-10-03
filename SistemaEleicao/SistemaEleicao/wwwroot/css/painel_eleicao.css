@@ -30,6 +30,14 @@
 
     .candidatos-cards div {
         float: left;
-        margin-top: 1rem;
+        margin-bottom: 1rem;
         margin-left: 4rem;
     }
+
+.criar-candidato {
+    transform: translateY(-2.3rem);
+}
+
+.criar-cargo {
+    transform: translateY(-2.3rem);
+}
