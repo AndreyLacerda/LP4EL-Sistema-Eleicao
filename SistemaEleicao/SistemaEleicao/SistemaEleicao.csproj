@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\css\cadastro - Cópia.css" />
     <Content Remove="wwwroot\css\index.razor" />
   </ItemGroup>
 

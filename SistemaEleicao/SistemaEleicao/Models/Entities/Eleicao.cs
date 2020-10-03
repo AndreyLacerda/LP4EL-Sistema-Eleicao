@@ -7,6 +7,19 @@ namespace SistemaEleicao.Models.Entities
     [Table("eleicao")]
     public class Eleicao
     {
+        public Eleicao()
+        {
+        }
+
+        public Eleicao(string titulo, string descricao, string chave_acesso, bool voto_multiplo,string status)
+        {
+            Titulo = titulo;
+            Descricao = descricao;
+            ChaveAcesso = chave_acesso;
+            VotoMultiplo = voto_multiplo;
+            Status = status;
+        }
+
 
         [Key]
         [Column("cod_eleicao", TypeName = "NUMERIC(10)")]
@@ -24,8 +37,7 @@ namespace SistemaEleicao.Models.Entities
         [Column("voto_multiplo", TypeName = "BOOLEAN")]
         public bool VotoMultiplo { get; set; }
 
-        [Column("status", TypeName = "status_eleicao_t")]
+        [Column("status", TypeName = "CHAR(1)")]
         public string Status { get; set; }
-
     }
 }
