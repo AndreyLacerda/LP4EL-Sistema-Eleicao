@@ -20,8 +20,5 @@ namespace SistemaEleicao.Models.Entities
         [Column("descricao", TypeName = "VARCHAR(255)")]
         public string Descricao { get; set; }
 
-        [Column("quant_votos", TypeName = "INT")]
-        public int QuantVotos { get; set; }
-
     }
 }

@@ -33,7 +33,6 @@ namespace SistemaEleicao.Controllers
                 {
                     CargoCriacao cargo = new CargoCriacao();
                     cargo.CodEleicao = Decimal.Parse(id);
-                    cargo.QuantVotos = 1;
                     ViewBag.EleicaoId = id;
                     ViewBag.MensagemSucesso = TempData["MensagemSucesso"] != null ? TempData["MensagemSucesso"].ToString() : null;
                     return View(cargo);
@@ -64,7 +63,6 @@ namespace SistemaEleicao.Controllers
                         cargoModel.CodCargo = cargo.CodCargo;
                         cargoModel.Nome = cargo.Nome;
                         cargoModel.Descricao = cargo.Descricao;
-                        cargoModel.QuantVotos = cargo.QuantVotos;
                         ViewBag.MensagemSucesso = TempData["MensagemSucesso"] != null ? TempData["MensagemSucesso"].ToString() : null;
                         return View(cargoModel);
                     }
@@ -97,7 +95,6 @@ namespace SistemaEleicao.Controllers
                         cargo.CodEleicao = cargoCriacao.CodEleicao;
                         cargo.Descricao = cargoCriacao.Descricao;
                         cargo.Nome = cargoCriacao.Nome;
-                        cargo.QuantVotos = cargoCriacao.QuantVotos;
                         cargo.CodCargo = _db.GetMySequence("seq_cargo");
 
                         _db.Cargos.Add(cargo);
@@ -136,7 +133,6 @@ namespace SistemaEleicao.Controllers
                         cargo.CodEleicao = cargoCriacao.CodEleicao;
                         cargo.Descricao = cargoCriacao.Descricao;
                         cargo.Nome = cargoCriacao.Nome;
-                        cargo.QuantVotos = cargoCriacao.QuantVotos;
                         cargo.CodCargo = cargoCriacao.CodCargo;
 
                         _db.Cargos.Update(cargo);

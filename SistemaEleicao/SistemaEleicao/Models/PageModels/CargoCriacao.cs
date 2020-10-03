@@ -15,8 +15,5 @@ namespace SistemaEleicao.Models.PageModels
         [Required(ErrorMessage = "Este campo é obrigatório.")]
         public string Descricao { get; set; }
 
-        [Required(ErrorMessage = "Este campo é obrigatório.")]
-        [Range(1, 5, ErrorMessage = "Por valor insira um valor válido entre 1 e 5.")]
-        public int QuantVotos { get; set; }
     }
 }

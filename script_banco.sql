@@ -23,7 +23,6 @@ CREATE TABLE cargo (
 	cod_eleicao	NUMERIC(10) NOT NULL,
 	nome	VARCHAR(50) NOT NULL,
 	descricao	VARCHAR(255) NOT NULL,
-	quant_votos	INT NOT NULL,
 	FOREIGN KEY(cod_eleicao) references eleicao(cod_eleicao)
 );
 

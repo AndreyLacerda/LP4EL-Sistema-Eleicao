@@ -47,11 +47,6 @@
         @Html.TextAreaFor(model => model.Descricao, new { @class = "form-control", @placeholder = "Descrição do Cargo", @maxlength = "255" })
         @Html.ValidationMessageFor(model => model.Descricao)
     </div>
-    <div class="form-group">
-        @Html.LabelFor(model => model.QuantVotos, "Quantidade de candidatos votáveis*")
-        @Html.TextBoxFor(model => model.QuantVotos, new { @class = "form-control", @placeholder = "Quantidade de candidatos votáveis", @type = "number", @Value = 1, @min = "1", @max = "5" })
-        @Html.ValidationMessageFor(model => model.QuantVotos)
-    </div>
     <div class="d-flex justify-content-center">
         <button type="submit" value="submit" class="btn btn-info">Cadastrar Cargo</button>
     </div>
