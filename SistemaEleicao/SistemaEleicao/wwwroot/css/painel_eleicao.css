@@ -24,20 +24,27 @@
     margin-top: 2rem;
 }
 
-.candidatos-cards {
-    display: table;
-}
-
-    .candidatos-cards div {
-        float: left;
-        margin-bottom: 1rem;
-        margin-left: 4rem;
-    }
-
 .criar-candidato {
     transform: translateY(-2.3rem);
 }
 
 .criar-cargo {
     transform: translateY(-2.3rem);
+}
+
+.imagem-candidato {
+    max-height: 200px;
+    width: auto;
+}
+
+.card-title {
+    max-height: 50px !important;
+}
+
+.card-subtitle {
+    max-height: 50px !important;
+}
+
+.card-text {
+    max-height: 300px !important;
 }

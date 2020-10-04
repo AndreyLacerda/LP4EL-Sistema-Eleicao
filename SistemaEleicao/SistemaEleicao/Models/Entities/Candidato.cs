@@ -22,10 +22,10 @@ namespace SistemaEleicao.Models.Entities
         public string Imagem { get; set; }
 
         [Column("descricao", TypeName = "VARCHAR(255)")]
-        public bool Descricao { get; set; }
+        public string Descricao { get; set; }
 
         [Column("grupo_partido", TypeName = "VARCHAR(50)")]
-        public bool GrupoPartido { get; set; }
+        public string GrupoPartido { get; set; }
 
     }
 }
