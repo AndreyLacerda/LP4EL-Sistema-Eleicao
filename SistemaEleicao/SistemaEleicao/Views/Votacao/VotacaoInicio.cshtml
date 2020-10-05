@@ -1,0 +1,42 @@
+﻿@model SistemaEleicao.Models.Entities.Eleicao
+@{
+    ViewData["Title"] = "Eleição - Início";
+}
+
+@section Style {
+    <link rel="stylesheet" href="~/css/votacao_inicio.css" />
+}
+
+<div class="text-center">
+    <h1 class="display-4">Eleição - Início</h1>
+</div>
+
+<div class="text-left">
+    <h2>@Model.Titulo</h2>
+    <p><b>Descrição:</b> @Model.Descricao</p>
+    @if (Model.VotoMultiplo)
+    {
+        <p><b>(Esta eleição aceita que você vote mais de uma vez!)</b></p>
+    }
+    else
+    {
+        <p><b>(Esta eleição não aceita que você vote mais de uma vez!)</b></p>
+    }
+    @if (Model.Status.Equals("P"))
+    {
+        <div class="text-center mensagem-votacao">
+            <h3>A votação ainda não começou. Volte mais tarde para votar, assim que a eleição começar!</h3>
+        </div>
+    }
+    else
+    {
+        <div class="text-center mensagem-votacao">
+            <a type="button" class="btn btn-outline-primary botao-votacao" href="@Url.Action("Votacao", "Votacao", new { id = Model.CodEleicao })">
+                Ir para a Votação!
+            </a>
+        </div>
+    }
+</div>
+<div class="text-left botao-return">
+    <a type="button" class="btn btn-secondary" asp-area="" asp-controller="ListaVotos" asp-action="MeusVotos">Voltar para a lista de votos</a>
+</div>

@@ -1,36 +1,27 @@
-﻿@model IQueryable<SistemaEleicao.Models.Entities.Eleicao>
+﻿@model List<SistemaEleicao.Models.Entities.Eleicao>
 @{
-    ViewData["Title"] = "Minhas Eleições";
+    ViewData["Title"] = "Meus Votos";
 }
 
 @section Style {
-    <link rel="stylesheet" href="~/css/minhas_eleicoes.css" />
+    <link rel="stylesheet" href="~/css/meus_votos.css" />
 }
 
 <div class="text-center">
-    <h1 class="display-4">Minhas Eleições</h1>
-</div>
-
-<div class="text-right botao-criar">
-    <a type="button" class="btn btn-outline-success" asp-area="" asp-controller="CriacaoVotacao" asp-action="CriacaoVotacao">
-        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus-circle-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" />
-        </svg>
-        Criar uma nova eleição
-    </a>
+    <h1 class="display-4">Meus Votos</h1>
 </div>
 
 @if (Model.Count() == 0)
 {
-    <div class="text-center sem-votacao">
+    <div class="text-center sem-votos">
         <h3>
-            <small class="text-muted">Você ainda não possui uma eleição.</small>
+            <small class="text-muted">Você ainda não participou de uma eleição.</small>
         </h3>
     </div>
 }
 else
 {
-    <div class="accordion" id="accordionExample">
+    <div class="accordion lista-votos" id="accordionExample">
         @foreach (var eleicao in Model)
         {
             <div class="card">
@@ -78,7 +69,7 @@ else
                                 }
                             </div>
                             <div class="column2">
-                                <a href="@Url.Action("PainelEleicao", "PainelEleicao", new { id = eleicao.CodEleicao })" type="button" class="btn btn-outline-info">Acessar</a>
+                                <a href="@Url.Action("VotacaoInicio", "Votacao", new { id = eleicao.CodEleicao })" type="button" class="btn btn-outline-info">Acessar</a>
                             </div>
                         </div>
                         <br>

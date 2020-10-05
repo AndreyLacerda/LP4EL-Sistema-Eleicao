@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Transactions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -51,16 +52,22 @@ namespace SistemaEleicao.Controllers
                                             idUser + "' and cod_eleicao = " + id + " and organizador = true)");
                 if (eleicao.Count() > 0)
                 {
-                    Eleicao registroEleicao = eleicao.First();
-                    _db.Votos.RemoveRange(_db.Votos.Where(v => v.CodEleicao == eleicao.First().CodEleicao));
-                    _db.CargoCandidatos.RemoveRange(_db.CargoCandidatos.Where(c => c.CodEleicao == eleicao.First().CodEleicao));
-                    _db.Candidatos.RemoveRange(_db.Candidatos.Where(c => c.CodEleicao == eleicao.First().CodEleicao));
-                    _db.Cargos.RemoveRange(_db.Cargos.Where(c => c.CodEleicao == eleicao.First().CodEleicao));
-                    _db.UsuarioEleicoes.RemoveRange(_db.UsuarioEleicoes.Where(u => u.CodEleicao == eleicao.First().CodEleicao));
-                    _db.SaveChanges();
-                    _db.Eleicoes.Remove(registroEleicao);
-                    _db.SaveChanges();
+                    using (var scope = new TransactionScope(TransactionScopeOption.Required,
+                                new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted }))
+                    {
+                        Eleicao registroEleicao = eleicao.First();
+                        _db.Votos.RemoveRange(_db.Votos.Where(v => v.CodEleicao == eleicao.First().CodEleicao));
+                        _db.CargoCandidatos.RemoveRange(_db.CargoCandidatos.Where(c => c.CodEleicao == eleicao.First().CodEleicao));
+                        _db.SaveChanges();
+                        _db.Candidatos.RemoveRange(_db.Candidatos.Where(c => c.CodEleicao == eleicao.First().CodEleicao));
+                        _db.Cargos.RemoveRange(_db.Cargos.Where(c => c.CodEleicao == eleicao.First().CodEleicao));
+                        _db.UsuarioEleicoes.RemoveRange(_db.UsuarioEleicoes.Where(u => u.CodEleicao == eleicao.First().CodEleicao));
+                        _db.SaveChanges();
+                        _db.Eleicoes.Remove(registroEleicao);
+                        _db.SaveChanges();
 
+                        scope.Complete();
+                    }
                     return RedirectToAction("MinhasEleicoes", "ListaEleicao");
                 }
             }

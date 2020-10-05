@@ -92,3 +92,7 @@ body {
     min-width: 8.5rem !important;
     width: 8.5rem !important;
 }
+
+.form-busca {
+    width: 300px!important;
+}

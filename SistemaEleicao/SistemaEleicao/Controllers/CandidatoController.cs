@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Transactions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -197,14 +198,21 @@ namespace SistemaEleicao.Controllers
                     var candidatoExistente = _db.Candidatos.SingleOrDefault(u => u.CodCandidato.ToString().Equals(candidato));
                     if (candidatoExistente != null)
                     {
-                        string pastaUpload = Path.Combine(_hostingEnvironment.WebRootPath + "/media");
-                        string pathArquivo = Path.Combine(pastaUpload, candidatoExistente.Imagem);
-                        System.IO.File.Delete(pathArquivo);
-                        _db.Votos.RemoveRange(_db.Votos.Where(v => v.CodCargo == candidatoExistente.CodCandidato));
-                        _db.CargoCandidatos.RemoveRange(_db.CargoCandidatos.Where(c => c.CodCargo == candidatoExistente.CodCandidato));
-                        _db.SaveChanges();
-                        _db.Candidatos.Remove(candidatoExistente);
-                        _db.SaveChanges();
+                        using (var scope = new TransactionScope(TransactionScopeOption.Required,
+                                new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted }))
+                        {
+                            string pastaUpload = Path.Combine(_hostingEnvironment.WebRootPath + "/media");
+                            string pathArquivo = Path.Combine(pastaUpload, candidatoExistente.Imagem);
+                            System.IO.File.Delete(pathArquivo);
+                            _db.Votos.RemoveRange(_db.Votos.Where(v => v.CodCargo == candidatoExistente.CodCandidato));
+                            _db.CargoCandidatos.RemoveRange(_db.CargoCandidatos.Where(c => c.CodCargo == candidatoExistente.CodCandidato));
+                            _db.SaveChanges();
+                            _db.Candidatos.Remove(candidatoExistente);
+                            _db.SaveChanges();
+
+                            scope.Complete();
+                        }
+                        
                     }
 
                     return RedirectToAction("PainelEleicao", "PainelEleicao", new { id });

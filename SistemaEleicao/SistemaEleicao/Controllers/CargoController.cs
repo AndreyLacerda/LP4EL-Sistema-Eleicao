@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Transactions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -165,11 +166,18 @@ namespace SistemaEleicao.Controllers
                     var cargoExistente = _db.Cargos.SingleOrDefault(u => u.CodCargo.ToString().Equals(cargo));
                     if (cargoExistente != null)
                     {
-                        _db.Votos.RemoveRange(_db.Votos.Where(v => v.CodCargo == cargoExistente.CodCargo));
-                        _db.CargoCandidatos.RemoveRange(_db.CargoCandidatos.Where(c => c.CodCargo == cargoExistente.CodCargo));
-                        _db.SaveChanges();
-                        _db.Cargos.Remove(cargoExistente);
-                        _db.SaveChanges();
+                        using (var scope = new TransactionScope(TransactionScopeOption.Required,
+                                new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted }))
+                        {
+                            _db.Votos.RemoveRange(_db.Votos.Where(v => v.CodCargo == cargoExistente.CodCargo));
+                            _db.CargoCandidatos.RemoveRange(_db.CargoCandidatos.Where(c => c.CodCargo == cargoExistente.CodCargo));
+                            _db.SaveChanges();
+                            _db.Cargos.Remove(cargoExistente);
+                            _db.SaveChanges();
+
+                            scope.Complete();
+                        }
+                        
                     }
 
                     return RedirectToAction("PainelEleicao", "PainelEleicao", new { id });

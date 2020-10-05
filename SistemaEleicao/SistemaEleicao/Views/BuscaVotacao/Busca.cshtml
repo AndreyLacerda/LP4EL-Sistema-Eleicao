@@ -1,0 +1,53 @@
+﻿@model SistemaEleicao.Models.PageModels.ResultadoBusca
+
+@{
+    ViewData["Title"] = "Resultado da Busca";
+}
+
+@section Style {
+    <link rel="stylesheet" href="~/css/busca.css" />
+}
+
+<div class="text-center heading-busca">
+    <h1 class="display-4">Resultado da Pesquisa</h1>
+    <h2>Pesquisa por: @Model.ValorPesquisa</h2>
+</div>
+
+@if (Model.Eleicoes.Count() == 0)
+{
+    <div class="text-center sem-resultado">
+        <h3>
+            <small class="text-muted">Nenhum resultado foi encontrado.</small>
+        </h3>
+    </div>
+}
+else
+{
+    @foreach (var eleicao in Model.Eleicoes)
+    {
+        <div class="card resultado">
+            <div class="card-body">
+                <h5 class="card-title">@eleicao.Titulo</h5>
+                @if (eleicao.Status == "P")
+                {
+                    <p class="card-text"><b>Status:</b> Preparação</p>
+                }
+                else
+                {
+                    @if (eleicao.Status == "I")
+                    {
+                        <p class="card-text"><b>Status:</b> Iniciada</p>
+                    }
+                    else
+                    {
+                        <p class="card-text"><b>Status:</b> Finalizada</p>
+                    }
+                }
+                <p class="card-text"><b>Descrição:</b> @eleicao.Descricao</p>
+                <a class="btn btn-primary" type="button" href="@Url.Action("FormInscricao", "Inscricao", new { id = eleicao.CodEleicao })">
+                    Inscrever-se
+                </a>
+            </div>
+        </div>
+    }
+}

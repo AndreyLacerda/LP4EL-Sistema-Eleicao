@@ -1,0 +1,17 @@
+﻿@model SistemaEleicao.Models.Entities.Eleicao
+@{
+    ViewData["Title"] = "Eleição - Votação";
+}
+
+@section Style {
+    <link rel="stylesheet" href="~/css/votacao.css" />
+}
+
+<div class="text-center">
+    <h1 class="display-4">Eleição - Votação</h1>
+</div>
+<div class="text-left botao-return">
+    <a type="button" class="btn btn-secondary" href="@Url.Action("VotacaoInicio", "Votacao", new { id = Model.CodEleicao })">
+        Voltar para o Início
+    </a>
+</div>
