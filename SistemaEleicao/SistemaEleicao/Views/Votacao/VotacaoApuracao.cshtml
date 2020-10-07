@@ -1,4 +1,4 @@
-﻿@model SistemaEleicao.Models.Entities.Eleicao
+﻿@model SistemaEleicao.Models.PageModels.ApuracaoVotacao
 @{
     ViewData["Title"] = "Eleição - Apuração";
 }
@@ -8,8 +8,122 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Eleição - Apuração</h1>
+    <h1 class="display-4">@ViewBag.EleicaoTitulo - Apuração</h1>
 </div>
-<div class="text-left botao-return">
-    <a type="button" class="btn btn-secondary" asp-area="" asp-controller="ListaVotos" asp-action="MeusVotos">Voltar para a lista de votos</a>
+
+<div class="text-center mensagem-votacao">
+    <h3>Votação concluída. O resultado foi:</h3>
+</div>
+
+<div class="text-left">
+    @if (Model.Resultados.Count() > 0)
+    {
+        @foreach (var voto in Model.Resultados)
+        {
+            <div class="text-center cargo-resultado">
+                <h5><b>@voto.Cargo.Nome</b></h5>
+            </div>
+            @if (voto.Candidatos.Count() > 0)
+            {
+                @foreach (var candidato in voto.Candidatos.Select((value, i) => new { value, i = i + 1 }))
+                {
+                    <div class="text-left resultados">
+                        @if (candidato.i == 1)
+                        {
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <b>@candidato.i.</b>
+                                    <img class="img-left" src="~/media/@candidato.value.Candidato.Imagem" />
+                                </div>
+                                <div class="col-xs-6 vencedor">
+                                    <b>@candidato.value.Candidato.Nome</b>
+                                    <br>
+                                    @if (@candidato.value.Candidato.GrupoPartido != null)
+                                    {
+                                        <b>@candidato.value.Candidato.GrupoPartido</b>
+                                        <br>
+                                    }
+                                    @if (@candidato.value.QuantidadeVotos > 1)
+                                    {
+                                        <b>(@candidato.value.QuantidadeVotos votos)</b>
+                                    }
+                                    else
+                                    {
+                                        <b>(@candidato.value.QuantidadeVotos voto)</b>
+                                    }
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <p>
+                                <b>@candidato.i.</b>
+                                <span>@candidato.value.Candidato.Nome</span>
+                                @if (@candidato.value.Candidato.GrupoPartido != null)
+                                {
+                                    <span> - @candidato.value.Candidato.GrupoPartido </span>
+                                }
+                                @if (@candidato.value.QuantidadeVotos > 1)
+                                {
+                                    <span>(@candidato.value.QuantidadeVotos votos)</span>
+                                }
+                                else
+                                {
+                                    <span>(@candidato.value.QuantidadeVotos voto)</span>
+                                }
+                            </p>
+                        }
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="text-center">
+                    <h3>
+                        <small class="text-muted">Este cargo não teve candidaturas.</small>
+                    </h3>
+                </div>
+            }
+        }
+    }
+    else
+    {
+        <div class="text-center">
+            <h3>
+                <small class="text-muted">Sem resultados para esta eleição.</small>
+            </h3>
+        </div>
+    }
+</div>
+
+<div class="text-center mensagem-votacao">
+    <h4>Nesta eleição, seus votos foram:</h4>
+</div>
+
+@if (Model.VotosUsuario.Count() > 0)
+{
+    <div class="row justify-content-center">
+        @foreach (var voto in Model.VotosUsuario)
+        {
+            <div class="text-left votos border col-xs-6">
+                <p><b>Cargo:</b> @voto.Cargo</p>
+                <p><b>Candidato:</b> @voto.Candidato.Nome</p>
+                <p><b>Quantidade de votos seus:</b> @voto.QuantidadeVotos</p>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="text-center">
+        <h3>
+            <small class="text-muted">Você não participou da votação.</small>
+        </h3>
+    </div>
+}
+
+<div class="text-left">
+    <a type="button" class="btn btn-secondary" href="@Url.Action("MeusVotos", "ListaVotos", new { id = @ViewBag.EleicaoId })">
+        Voltar para a lista de votos
+    </a>
 </div>

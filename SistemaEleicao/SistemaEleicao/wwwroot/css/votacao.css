@@ -1,1 +1,18 @@
-﻿
+﻿.span img {
+    margin-right: 10px;
+}
+
+.span .img-left {
+    float: left;
+}
+
+.img-left {
+    min-height: 200px;
+    max-height: 200px;
+    width: auto;
+    max-width: 300px;
+}
+
+.lista-candidatos {
+    margin-bottom: 2rem;
+}

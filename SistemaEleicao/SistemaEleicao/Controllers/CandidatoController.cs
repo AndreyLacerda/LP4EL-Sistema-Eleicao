@@ -35,7 +35,7 @@ namespace SistemaEleicao.Controllers
                                 .FromSqlRaw("SELECT * from eleicao where cod_eleicao IN " +
                                             "(select cod_eleicao from usuario_x_eleicao where cod_usuario = '" +
                                             idUser + "' and cod_eleicao = " + id + " and organizador = true)");
-                if (eleicao.Count() > 0)
+                if (eleicao.Count() > 0 && eleicao.First().Status.Equals("P"))
                 {
                     CandidatoCadastro candidato = new CandidatoCadastro();
                     candidato.CodEleicao = Decimal.Parse(id);
@@ -59,7 +59,7 @@ namespace SistemaEleicao.Controllers
                                 .FromSqlRaw("SELECT * from eleicao where cod_eleicao IN " +
                                             "(select cod_eleicao from usuario_x_eleicao where cod_usuario = '" +
                                             idUser + "' and cod_eleicao = " + id + " and organizador = true)");
-                if (eleicao.Count() > 0)
+                if (eleicao.Count() > 0 && eleicao.First().Status.Equals("P"))
                 {
                     var candidato = _db.Candidatos.SingleOrDefault(c => c.CodCandidato.ToString().Equals(candidatoId)); ;
                     if (candidato != null)
@@ -96,7 +96,7 @@ namespace SistemaEleicao.Controllers
                                 .FromSqlRaw("SELECT * from eleicao where cod_eleicao IN " +
                                             "(select cod_eleicao from usuario_x_eleicao where cod_usuario = '" +
                                             idUser + "' and cod_eleicao = " + candidatoCadastro.CodEleicao + " and organizador = true)");
-                if (eleicao.Count() > 0)
+                if (eleicao.Count() > 0 && eleicao.First().Status.Equals("P"))
                 {
                     var candidatoExistente = _db.Candidatos.Where(c => c.Nome.Equals(candidatoCadastro.Nome) && c.CodEleicao.Equals(candidatoCadastro.CodEleicao));
                     if (candidatoExistente.Count() == 0)
@@ -143,40 +143,48 @@ namespace SistemaEleicao.Controllers
                                 .FromSqlRaw("SELECT * from eleicao where cod_eleicao IN " +
                                             "(select cod_eleicao from usuario_x_eleicao where cod_usuario = '" +
                                             idUser + "' and cod_eleicao = " + candidatoEdicao.CodEleicao + " and organizador = true)");
-                if (eleicao.Count() > 0)
+                if (eleicao.Count() > 0 && eleicao.First().Status.Equals("P"))
                 {
                     var candidatoExistente = _db.Candidatos.Where(c => c.CodCandidato.Equals(candidatoEdicao.CodCandidato));
                     if (candidatoExistente.Count() > 0)
                     {
-                        Candidato candidato = new Candidato();
-                        candidato.CodEleicao = candidatoEdicao.CodEleicao;
-                        candidato.CodCandidato = candidatoEdicao.CodCandidato;
-                        candidato.Descricao = candidatoEdicao.Descricao;
-                        candidato.Nome = candidatoEdicao.Nome;
-                        candidato.GrupoPartido = candidatoEdicao.GrupoPartido;
-                        candidato.Imagem = candidatoEdicao.ImagemPath;
-
-                        if (candidatoEdicao.Imagem != null)
+                        var nomeExistente = _db.Candidatos.Where(c => c.Nome.Equals(candidatoEdicao.Nome) && c.CodEleicao.Equals(candidatoEdicao.CodEleicao));
+                        if (nomeExistente.Count() == 0)
                         {
-                            string pastaUpload = Path.Combine(_hostingEnvironment.WebRootPath + "/media");
-                            string pathArquivo = Path.Combine(pastaUpload, candidatoEdicao.ImagemPath);
-                            System.IO.File.Delete(pathArquivo);
-                            string nomeArquivo = Guid.NewGuid().ToString() + "_" + candidatoEdicao.Imagem.FileName;
-                            pathArquivo = Path.Combine(pastaUpload, nomeArquivo);
-                            FileStream fs = new FileStream(pathArquivo, FileMode.Create);
-                            candidatoEdicao.Imagem.CopyTo(fs);
-                            fs.Close();
-                            candidato.Imagem = nomeArquivo;
-                        }
-                        _db.Candidatos.Update(candidato);
-                        _db.SaveChanges();
+                            Candidato candidato = new Candidato();
+                            candidato.CodEleicao = candidatoEdicao.CodEleicao;
+                            candidato.CodCandidato = candidatoEdicao.CodCandidato;
+                            candidato.Descricao = candidatoEdicao.Descricao;
+                            candidato.Nome = candidatoEdicao.Nome;
+                            candidato.GrupoPartido = candidatoEdicao.GrupoPartido;
+                            candidato.Imagem = candidatoEdicao.ImagemPath;
 
-                        TempData["MensagemSucesso"] = "Alterações salvas com sucesso!";
-                        return RedirectToAction("EditarCandidato", new { id = candidatoEdicao.CodEleicao, candidatoId = candidatoEdicao.CodCandidato });
+                            if (candidatoEdicao.Imagem != null)
+                            {
+                                string pastaUpload = Path.Combine(_hostingEnvironment.WebRootPath + "/media");
+                                string pathArquivo = Path.Combine(pastaUpload, candidatoEdicao.ImagemPath);
+                                System.IO.File.Delete(pathArquivo);
+                                string nomeArquivo = Guid.NewGuid().ToString() + "_" + candidatoEdicao.Imagem.FileName;
+                                pathArquivo = Path.Combine(pastaUpload, nomeArquivo);
+                                FileStream fs = new FileStream(pathArquivo, FileMode.Create);
+                                candidatoEdicao.Imagem.CopyTo(fs);
+                                fs.Close();
+                                candidato.Imagem = nomeArquivo;
+                            }
+                            _db.Candidatos.Update(candidato);
+                            _db.SaveChanges();
+
+                            TempData["MensagemSucesso"] = "Alterações salvas com sucesso!";
+                            return RedirectToAction("EditarCandidato", new { id = candidatoEdicao.CodEleicao, candidatoId = candidatoEdicao.CodCandidato });
+                        }
+
+                        ViewBag.MensagemErro = "Já existe um candidato com este nome.";
+                        ViewBag.EleicaoId = candidatoEdicao.CodEleicao;
+                        return View("EditarCandidato", candidatoEdicao);
                     }
                     ViewBag.MensagemErro = "Este cargo não existe.";
                     ViewBag.EleicaoId = candidatoEdicao.CodEleicao;
-                    return View("CriarCandidato");
+                    return View("EditarCandidato", candidatoEdicao);
                 }
                 return RedirectToAction("MinhasEleicoes", "ListaEleicao");
             }
@@ -193,7 +201,7 @@ namespace SistemaEleicao.Controllers
                                 .FromSqlRaw("SELECT * from eleicao where cod_eleicao IN " +
                                             "(select cod_eleicao from usuario_x_eleicao where cod_usuario = '" +
                                             idUser + "' and cod_eleicao = " + id + " and organizador = true)");
-                if (eleicao.Count() > 0)
+                if (eleicao.Count() > 0 && eleicao.First().Status.Equals("P"))
                 {
                     var candidatoExistente = _db.Candidatos.SingleOrDefault(u => u.CodCandidato.ToString().Equals(candidato));
                     if (candidatoExistente != null)

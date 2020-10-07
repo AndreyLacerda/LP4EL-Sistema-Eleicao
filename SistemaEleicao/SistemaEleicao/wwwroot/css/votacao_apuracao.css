@@ -1,1 +1,31 @@
-﻿
+﻿.mensagem-votacao {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.votos {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    margin-right: 3rem;
+}
+
+.resultados {
+    margin-bottom: 2rem;
+}
+
+.cargo-resultado {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.img-left {
+    min-height: 200px;
+    max-height: 200px;
+    width: auto;
+    max-width: 300px;
+    margin-right: 1rem;
+}
+
+.vencedor {
+    padding-top: 3rem;
+}

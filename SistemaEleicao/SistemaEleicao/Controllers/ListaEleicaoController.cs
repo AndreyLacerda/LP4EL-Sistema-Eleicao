@@ -24,7 +24,7 @@ namespace SistemaEleicao.Controllers
                 var eleicoes = _db.Eleicoes
                                 .FromSqlRaw("SELECT * from eleicao where cod_eleicao IN " +
                                             "(select cod_eleicao from usuario_x_eleicao where cod_usuario = '" +
-                                            idUser + "' and organizador = true)");
+                                            idUser + "' and organizador = true) ORDER BY titulo");
                 return View(eleicoes);
             }
             return RedirectToAction("Login", "Home");

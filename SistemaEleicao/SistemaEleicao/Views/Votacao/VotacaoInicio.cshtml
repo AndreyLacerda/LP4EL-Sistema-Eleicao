@@ -37,6 +37,8 @@
         </div>
     }
 </div>
-<div class="text-left botao-return">
-    <a type="button" class="btn btn-secondary" asp-area="" asp-controller="ListaVotos" asp-action="MeusVotos">Voltar para a lista de votos</a>
+<div class="text-left">
+    <a type="button" class="btn btn-secondary" href="@Url.Action("MeusVotos", "ListaVotos", new { id = Model.CodEleicao })">
+        Voltar para a lista de votos
+    </a>
 </div>

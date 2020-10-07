@@ -23,11 +23,13 @@ namespace SistemaEleicao.Controllers
             if (idUser != null)
             {
                 var usuario_x_eleicao = _db.UsuarioEleicoes
-                                            .Where(ue => ue.CodUsuario.ToString().Equals(idUser))
+                                            .Where(ue => ue.CodUsuario.ToString().Equals(idUser) &&
+                                                    !ue.Organizador)
                                             .Select(e=> e.CodEleicao)
                                             .ToList();
                 var eleicoes = _db.Eleicoes
                                 .Where(e => usuario_x_eleicao.Contains(e.CodEleicao))
+                                .OrderBy(e => e.Titulo)
                                 .ToList();
                 return View(eleicoes);
             }
