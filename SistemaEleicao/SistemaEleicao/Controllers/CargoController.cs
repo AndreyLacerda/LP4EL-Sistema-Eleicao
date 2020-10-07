@@ -30,7 +30,7 @@ namespace SistemaEleicao.Controllers
                                 .FromSqlRaw("SELECT * from eleicao where cod_eleicao IN " +
                                             "(select cod_eleicao from usuario_x_eleicao where cod_usuario = '" +
                                             idUser + "' and cod_eleicao = " + id + " and organizador = true)");
-                if (eleicao.Count() > 0)
+                if (eleicao.Count() > 0 && eleicao.First().Status.Equals("P"))
                 {
                     CargoCriacao cargo = new CargoCriacao();
                     cargo.CodEleicao = Decimal.Parse(id);
@@ -54,7 +54,7 @@ namespace SistemaEleicao.Controllers
                                 .FromSqlRaw("SELECT * from eleicao where cod_eleicao IN " +
                                             "(select cod_eleicao from usuario_x_eleicao where cod_usuario = '" +
                                             idUser + "' and cod_eleicao = " + id + " and organizador = true)");
-                if (eleicao.Count() > 0)
+                if (eleicao.Count() > 0 && eleicao.First().Status.Equals("P"))
                 {
                     var cargo = _db.Cargos.SingleOrDefault(c => c.CodCargo.ToString().Equals(cargoId)); ;
                     if (cargo != null)
@@ -87,7 +87,7 @@ namespace SistemaEleicao.Controllers
                                 .FromSqlRaw("SELECT * from eleicao where cod_eleicao IN " +
                                             "(select cod_eleicao from usuario_x_eleicao where cod_usuario = '" +
                                             idUser + "' and cod_eleicao = " + cargoCriacao.CodEleicao + " and organizador = true)");
-                if (eleicao.Count() > 0)
+                if (eleicao.Count() > 0 && eleicao.First().Status.Equals("P"))
                 {
                     var cargoExistente = _db.Cargos.Where(c => c.Nome.Equals(cargoCriacao.Nome) && c.CodEleicao.Equals(cargoCriacao.CodEleicao));
                     if (cargoExistente.Count() == 0)
@@ -125,26 +125,33 @@ namespace SistemaEleicao.Controllers
                                 .FromSqlRaw("SELECT * from eleicao where cod_eleicao IN " +
                                             "(select cod_eleicao from usuario_x_eleicao where cod_usuario = '" +
                                             idUser + "' and cod_eleicao = " + cargoCriacao.CodEleicao + " and organizador = true)");
-                if (eleicao.Count() > 0)
+                if (eleicao.Count() > 0 && eleicao.First().Status.Equals("P"))
                 {
                     var cargoExistente = _db.Cargos.Where(c => c.CodCargo.Equals(cargoCriacao.CodCargo));
                     if (cargoExistente.Count() > 0)
                     {
-                        Cargo cargo = new Cargo();
-                        cargo.CodEleicao = cargoCriacao.CodEleicao;
-                        cargo.Descricao = cargoCriacao.Descricao;
-                        cargo.Nome = cargoCriacao.Nome;
-                        cargo.CodCargo = cargoCriacao.CodCargo;
+                        var nomeExistente = _db.Cargos.Where(c => c.Nome.Equals(cargoCriacao.Nome) && c.CodEleicao.Equals(cargoCriacao.CodEleicao));
+                        if (nomeExistente.Count() == 0)
+                        {
+                            Cargo cargo = new Cargo();
+                            cargo.CodEleicao = cargoCriacao.CodEleicao;
+                            cargo.Descricao = cargoCriacao.Descricao;
+                            cargo.Nome = cargoCriacao.Nome;
+                            cargo.CodCargo = cargoCriacao.CodCargo;
 
-                        _db.Cargos.Update(cargo);
-                        _db.SaveChanges();
+                            _db.Cargos.Update(cargo);
+                            _db.SaveChanges();
 
-                        TempData["MensagemSucesso"] = "Alterações salvas com sucesso!";
-                        return RedirectToAction("EditarCargo", new { id = cargoCriacao.CodEleicao, cargoId = cargoCriacao.CodCargo });
+                            TempData["MensagemSucesso"] = "Alterações salvas com sucesso!";
+                            return RedirectToAction("EditarCargo", new { id = cargoCriacao.CodEleicao, cargoId = cargoCriacao.CodCargo });
+                        }
+                        ViewBag.MensagemErro = "Já existe um cargo com este nome.";
+                        ViewBag.EleicaoId = cargoCriacao.CodEleicao;
+                        return View("EditarCargo", cargoCriacao);
                     }
                     ViewBag.MensagemErro = "Este cargo não existe.";
                     ViewBag.EleicaoId = cargoCriacao.CodEleicao;
-                    return View("CriarCargo");
+                    return View("EditarCargo", cargoCriacao);
                 }
                 return RedirectToAction("MinhasEleicoes", "ListaEleicao");
             }
@@ -161,7 +168,7 @@ namespace SistemaEleicao.Controllers
                                 .FromSqlRaw("SELECT * from eleicao where cod_eleicao IN " +
                                             "(select cod_eleicao from usuario_x_eleicao where cod_usuario = '" +
                                             idUser + "' and cod_eleicao = " + id + " and organizador = true)");
-                if (eleicao.Count() > 0)
+                if (eleicao.Count() > 0 && eleicao.First().Status.Equals("P"))
                 {
                     var cargoExistente = _db.Cargos.SingleOrDefault(u => u.CodCargo.ToString().Equals(cargo));
                     if (cargoExistente != null)

@@ -23,54 +23,65 @@
             <div class="text-center cargo-resultado">
                 <h5><b>@voto.Cargo.Nome</b></h5>
             </div>
-            @foreach (var candidato in voto.Candidatos.Select((value, i) => new { value, i = i + 1 }))
+            @if (voto.Candidatos.Count() > 0)
             {
-                <div class="text-left resultados">
-                    @if (candidato.i == 1)
-                    {
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <b>@candidato.i.</b>
-                                <img class="img-left" src="~/media/@candidato.value.Candidato.Imagem" />
+                @foreach (var candidato in voto.Candidatos.Select((value, i) => new { value, i = i + 1 }))
+                {
+                    <div class="text-left resultados">
+                        @if (candidato.i == 1)
+                        {
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <b>@candidato.i.</b>
+                                    <img class="img-left" src="~/media/@candidato.value.Candidato.Imagem" />
+                                </div>
+                                <div class="col-xs-6 vencedor">
+                                    <b>@candidato.value.Candidato.Nome</b>
+                                    <br>
+                                    @if (@candidato.value.Candidato.GrupoPartido != null)
+                                    {
+                                        <b>@candidato.value.Candidato.GrupoPartido</b>
+                                        <br>
+                                    }
+                                    @if (@candidato.value.QuantidadeVotos > 1)
+                                    {
+                                        <b>(@candidato.value.QuantidadeVotos votos)</b>
+                                    }
+                                    else
+                                    {
+                                        <b>(@candidato.value.QuantidadeVotos voto)</b>
+                                    }
+                                </div>
                             </div>
-                            <div class="col-xs-6 vencedor">
-                                <b>@candidato.value.Candidato.Nome</b>
-                                <br>
+                        }
+                        else
+                        {
+                            <p>
+                                <b>@candidato.i.</b>
+                                <span>@candidato.value.Candidato.Nome</span>
                                 @if (@candidato.value.Candidato.GrupoPartido != null)
                                 {
-                                    <b>@candidato.value.Candidato.GrupoPartido</b>
-                                    <br>
+                                    <span> - @candidato.value.Candidato.GrupoPartido </span>
                                 }
                                 @if (@candidato.value.QuantidadeVotos > 1)
                                 {
-                                    <b>(@candidato.value.QuantidadeVotos votos)</b>
+                                    <span>(@candidato.value.QuantidadeVotos votos)</span>
                                 }
                                 else
                                 {
-                                    <b>(@candidato.value.QuantidadeVotos voto)</b>
+                                    <span>(@candidato.value.QuantidadeVotos voto)</span>
                                 }
-                            </div>
-                        </div>
-                    }
-                    else
-                    {
-                        <p>
-                            <b>@candidato.i.</b>
-                            <span>@candidato.value.Candidato.Nome</span>
-                            @if (@candidato.value.Candidato.GrupoPartido != null)
-                            {
-                                <span> - @candidato.value.Candidato.GrupoPartido </span>
-                            }
-                            @if (@candidato.value.QuantidadeVotos > 1)
-                            {
-                                <span>(@candidato.value.QuantidadeVotos votos)</span>
-                            }
-                            else
-                            {
-                                <span>(@candidato.value.QuantidadeVotos voto)</span>
-                            }
-                        </p>
-                    }
+                            </p>
+                        }
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="text-center">
+                    <h3>
+                        <small class="text-muted">Este cargo não teve candidaturas.</small>
+                    </h3>
                 </div>
             }
         }

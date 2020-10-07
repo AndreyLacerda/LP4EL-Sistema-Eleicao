@@ -62,7 +62,7 @@ namespace SistemaEleicao.Controllers
                                 .FromSqlRaw("SELECT * from eleicao where cod_eleicao IN " +
                                             "(select cod_eleicao from usuario_x_eleicao where cod_usuario = '" +
                                             idUser + "' and cod_eleicao = " + id + " and organizador = true)");
-                if (eleicao.Count() > 0)
+                if (eleicao.Count() > 0 && eleicao.First().Status.Equals("P"))
                 {
                     var cargo = _db.Cargos.Where(c => c.CodCargo.ToString().Equals(cargoId)).ToList();
                     if (cargo.Count() > 0)
@@ -108,7 +108,7 @@ namespace SistemaEleicao.Controllers
                                 .FromSqlRaw("SELECT * from eleicao where cod_eleicao IN " +
                                             "(select cod_eleicao from usuario_x_eleicao where cod_usuario = '" +
                                             idUser + "' and cod_eleicao = " + candidaturaCadastro.CodEleicao + " and organizador = true)");
-                if (eleicao.Count() > 0)
+                if (eleicao.Count() > 0 && eleicao.First().Status.Equals("P"))
                 {
                     foreach (decimal codCandidato in candidaturaCadastro.CodCandidato)
                     {
@@ -141,7 +141,7 @@ namespace SistemaEleicao.Controllers
                                 .FromSqlRaw("SELECT * from eleicao where cod_eleicao IN " +
                                             "(select cod_eleicao from usuario_x_eleicao where cod_usuario = '" +
                                             idUser + "' and cod_eleicao = " + id + " and organizador = true)");
-                if (eleicao.Count() > 0)
+                if (eleicao.Count() > 0 && eleicao.First().Status.Equals("P"))
                 {
                     var cargoExistente = _db.Cargos.SingleOrDefault(u => u.CodCargo.ToString().Equals(cargo));
                     var candidatoExistente = _db.Candidatos.SingleOrDefault(u => u.CodCandidato.ToString().Equals(candidato));
