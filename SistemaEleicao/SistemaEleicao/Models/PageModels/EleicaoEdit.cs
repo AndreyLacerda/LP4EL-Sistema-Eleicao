@@ -2,7 +2,7 @@
 
 namespace SistemaEleicao.Models.PageModels
 {
-    public class Eleicoes
+    public class EleicoesEdit
     {
 
         public decimal CodEleicao { get; set; }
@@ -13,7 +13,6 @@ namespace SistemaEleicao.Models.PageModels
         [Required(ErrorMessage = "Este campo é obrigatório.")]
         public string Descricao { get; set; }
 
-        [Required(ErrorMessage = "Este campo é obrigatório.")]
         public string ChaveAcesso { get; set; }
 
         [Required(ErrorMessage = "Este campo é obrigatório.")]
@@ -23,7 +22,6 @@ namespace SistemaEleicao.Models.PageModels
         public string Status { get; set; }
 
         [Compare("ChaveAcesso", ErrorMessage = "As chaves não estão iguais.")]
-        [Required(ErrorMessage = "Este campo é obrigatório.")]
         public string ConfirmacaoChave { get; set; }
     }
 }

@@ -1,0 +1,74 @@
+﻿@model SistemaEleicao.Models.PageModels.EleicoesEdit
+@{
+    ViewData["Title"] = "Criar Eleição";
+}
+
+@section Style {
+    <link rel="stylesheet" href="~/css/criar-votacao.css" />
+}
+
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js" type="text/javascript"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js" type="text/javascript"></script>
+}
+
+<div class="text-center">
+    <h1 class="display-4">Edição da Eleição - @Model.Titulo</h1>
+</div>
+
+<div class="d-flex justify-content-center">
+    @using (Html.BeginForm("EditarVotacaoPost", "CriacaoVotacao", FormMethod.Post, new { @class = "form-cadastro border" }))
+    {
+        @Html.AntiForgeryToken()
+
+        @if (@ViewBag.MensagemErro != null)
+        {
+            <div class="alert alert-danger" role="alert">
+                @ViewBag.MensagemErro
+            </div>
+        }
+
+        @if (@ViewBag.MensagemSucesso != null)
+        {
+            <div class="alert alert-success" role="alert">
+                @ViewBag.MensagemSucesso
+            </div>
+        }
+
+        @Html.TextBoxFor(model => model.CodEleicao, new { @Value = Model.CodEleicao, @type = "hidden" })
+        @Html.TextBoxFor(model => model.Status, new { @Value = Model.Status, @type = "hidden" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Titulo, "Titulo*")
+            @Html.TextBoxFor(model => model.Titulo, new { @class = "form-control", @placeholder = "Título", @type = "titulo", @maxlength = "100", @Value = Model.Titulo })
+            @Html.ValidationMessageFor(model => model.Titulo)
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Descricao, "Descrição*")
+            @Html.TextAreaFor(model => model.Descricao, new { @class = "form-control", @placeholder = "Descrição", @maxlength = "500", @Value = Model.Descricao })
+            @Html.ValidationMessageFor(model => model.Descricao)
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.ChaveAcesso, "Chave de Acesso* ")
+            @Html.TextBoxFor(model => model.ChaveAcesso, new { @class = "form-control", @placeholder = "Chave de Acesso", @type = "password", @maxlength = "100" })
+            @Html.ValidationMessageFor(model => model.ChaveAcesso)
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.ConfirmacaoChave, "Confirmar Chave de Acesso*")
+            @Html.TextBoxFor(model => model.ConfirmacaoChave, new { @class = "form-control", @placeholder = "Confirmação da Chave de Acesso", @type = "password", @maxlength = "100", @Value = Model.ChaveAcesso })
+            @Html.ValidationMessageFor(model => model.ConfirmacaoChave)
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.VotoMultiplo, "Votação múltipla?")
+            @Html.CheckBoxFor(model => model.VotoMultiplo, new { @class = "form-control", @Value = Model.VotoMultiplo })
+            @Html.ValidationMessageFor(model => model.VotoMultiplo)
+        </div>
+        <div class="d-flex justify-content-center">
+            <button type="submit" value="submit" class="btn btn-info">Salvar Alterações</button>
+        </div>
+    }
+</div>
+
+<div class="text-left">
+    <a type="button" class="btn btn-secondary" href="@Url.Action("PainelEleicao", "PainelEleicao", new { id = Model.CodEleicao })">Voltar para o painel</a>
+</div>

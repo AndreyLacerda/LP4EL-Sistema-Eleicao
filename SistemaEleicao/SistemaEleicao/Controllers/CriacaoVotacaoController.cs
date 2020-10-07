@@ -1,6 +1,11 @@
-﻿using System.Linq;
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Transactions;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SistemaEleicao.Data.Contexts;
 using SistemaEleicao.Models.Entities;
 using SistemaEleicao.Models.PageModels;
@@ -53,6 +58,92 @@ namespace SistemaEleicao.Controllers
                 ViewBag.MensagemErro = "Este título já está em uso.";
                 return View("CriacaoVotacao");
             }
+            return RedirectToAction("Login", "Home");
+        }
+
+        [Route("eleicao/editar-eleicao")]
+        public IActionResult EditarVotacao(string id)
+        {
+            string idUser = HttpContext.Session.GetString("Id");
+            if (idUser != null)
+            {
+                var eleicao = _db.Eleicoes
+                                .FromSqlRaw("SELECT * from eleicao where cod_eleicao IN " +
+                                            "(select cod_eleicao from usuario_x_eleicao where cod_usuario = '" +
+                                            idUser + "' and cod_eleicao = " + id + " and organizador = true)");
+                if (eleicao.Count() > 0)
+                {
+                    var eleicaoEdit = _db.Eleicoes.SingleOrDefault(e => e.CodEleicao.ToString().Equals(id));
+                    if (eleicao != null)
+                    {
+                        EleicoesEdit eleicaoModel = new EleicoesEdit();
+                        eleicaoModel.CodEleicao = eleicaoEdit.CodEleicao;
+                        eleicaoModel.Titulo = eleicaoEdit.Titulo;
+                        eleicaoModel.Descricao = eleicaoEdit.Descricao;
+                        eleicaoModel.Status = eleicaoEdit.Status;
+                        eleicaoModel.VotoMultiplo = eleicaoEdit.VotoMultiplo;
+                        ViewBag.MensagemSucesso = TempData["MensagemSucesso"] != null ? TempData["MensagemSucesso"].ToString() : null;
+                        return View(eleicaoModel);
+                    }
+
+                    return RedirectToAction("PainelEleicao", "PainelEleicao", new { id });
+                }
+                return RedirectToAction("MinhasEleicoes", "ListaEleicao");
+            }
+
+            return RedirectToAction("Login", "Home");
+        }
+        [Route("eleicao/editar-eleicao/Post")]
+        [HttpPost]
+        public IActionResult EditarVotacaoPost(EleicoesEdit cadastrarEleicao)
+        {
+            string idUser = HttpContext.Session.GetString("Id");
+            if (idUser != null)
+            {
+                var eleicao = _db.Eleicoes
+                                .FromSqlRaw("SELECT COUNT(*) from eleicao where cod_eleicao IN " +
+                                            "(select cod_eleicao from usuario_x_eleicao where cod_usuario = '" +
+                                            idUser + "' and cod_eleicao = " + cadastrarEleicao.CodEleicao + " and organizador = true)");
+                if (eleicao.Count() > 0)
+                {
+                    var eleicaoEdit = _db.Eleicoes.Where(e => e.Titulo.Equals(cadastrarEleicao.Titulo) && e.CodEleicao.Equals(cadastrarEleicao.CodEleicao));
+                    if (eleicaoEdit.Count() == 0)
+                    {
+                        if (cadastrarEleicao.ChaveAcesso == null)
+                        {
+                            Eleicao eleicaoModelEdit = new Eleicao();
+                            eleicaoModelEdit.CodEleicao = cadastrarEleicao.CodEleicao;
+                            eleicaoModelEdit.Titulo = cadastrarEleicao.Titulo;
+                            eleicaoModelEdit.Descricao = cadastrarEleicao.Descricao;
+                            eleicaoModelEdit.Status = cadastrarEleicao.Status;
+                            eleicaoModelEdit.VotoMultiplo = cadastrarEleicao.VotoMultiplo;
+                            _db.Eleicoes.Update(eleicaoModelEdit);
+                            _db.SaveChanges();
+                            TempData["MensagemSucesso"] = "Eleição alterada com sucesso.";
+                            return RedirectToAction("EditarVotacao", "CriacaoVotacao", new { id = cadastrarEleicao.CodEleicao });
+                        }
+                        else
+                        {
+                            cadastrarEleicao.ChaveAcesso = BCrypt.Net.BCrypt.HashPassword(cadastrarEleicao.ChaveAcesso);
+                            Eleicao eleicaoModel = new Eleicao();
+                            eleicaoModel.ChaveAcesso = cadastrarEleicao.ChaveAcesso;
+                            eleicaoModel.CodEleicao = cadastrarEleicao.CodEleicao;
+                            eleicaoModel.Titulo = cadastrarEleicao.Titulo;
+                            eleicaoModel.Descricao = cadastrarEleicao.Descricao;
+                            eleicaoModel.Status = cadastrarEleicao.Status;
+                            eleicaoModel.VotoMultiplo = cadastrarEleicao.VotoMultiplo;
+                            _db.Eleicoes.Update(eleicaoModel);
+                            _db.SaveChanges();
+                            TempData["MensagemSucesso"] = "Eleição alterada com sucesso.";
+                            return RedirectToAction("EditarVotacao", "CriacaoVotacao", new { id = cadastrarEleicao.CodEleicao });
+                        }
+                    }
+                    ViewBag.MensagemErro = "Este título já está sendo utilizado.";
+                    return View("EditarVotacao", cadastrarEleicao);
+                }
+                return RedirectToAction("MinhasEleicoes", "ListaEleicao");
+            }
+
             return RedirectToAction("Login", "Home");
         }
     }
