@@ -1,4 +1,4 @@
-﻿@model SistemaEleicao.Models.Entities.Eleicao
+﻿@model List<SistemaEleicao.Models.PageModels.Votacao>
 @{
     ViewData["Title"] = "Eleição - Votação";
 }
@@ -8,10 +8,62 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Eleição - Votação</h1>
+    <h1 class="display-4">@ViewBag.EleicaoTitulo - Votação</h1>
 </div>
-<div class="text-left botao-return">
-    <a type="button" class="btn btn-secondary" href="@Url.Action("VotacaoInicio", "Votacao", new { id = Model.CodEleicao })">
+
+@if (@ViewBag.MensagemSucesso != null)
+{
+    <div class="alert alert-success text-center" role="alert">
+        @ViewBag.MensagemSucesso
+    </div>
+}
+
+@foreach (var votacao in Model)
+{
+    <div class="text-center">
+        <h2>@votacao.Cargo.Nome</h2>
+        <p><b>Descrição:</b> @votacao.Cargo.Descricao</p>
+    </div>
+
+    <div class="accordion lista-candidatos" id="accordion-@votacao.Cargo.CodCargo">
+        @foreach (var candidato in votacao.Candidatos)
+        {
+            <div class="card">
+                <div class="card-header" id="heading-@candidato.Nome">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse-@candidato.CodCandidato-@votacao.Cargo.CodCargo" aria-expanded="true" aria-controls="collapse-@candidato.CodCandidato-@votacao.Cargo.CodCargo">
+                            @candidato.Nome
+                        </button>
+                    </h2>
+                </div>
+
+                <div id="collapse-@candidato.CodCandidato-@votacao.Cargo.CodCargo" class="collapse" aria-labelledby="heading-@candidato.CodCandidato-@votacao.Cargo.CodCargo" data-parent="#accordion-@votacao.Cargo.CodCargo">
+                    <div class="card-body">
+                        <div class="span">
+                            <img class="img-left" src="~/media/@candidato.Imagem" />
+                            <div class="content-heading"><h3>@candidato.Nome &nbsp </h3></div>
+                            @if (candidato.GrupoPartido != null)
+                            {
+                                <p><b>Grupo/Partido:</b> @candidato.GrupoPartido</p>
+                            }
+                            <p><b>Descrição:</b> @candidato.Descricao</p>
+                            <div class="text-center">
+                                <a type="button" class="btn btn-outline-success" href="@Url.Action("RegistrarVoto", "Votacao", new { id = ViewBag.EleicaoId, cargo = votacao.Cargo.CodCargo, candidato = candidato.CodCandidato  })">
+                                    Votar
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+
+<div class="text-left">
+    <a type="button" class="btn btn-secondary" href="@Url.Action("VotacaoInicio", "Votacao", new { id = @ViewBag.EleicaoId })">
         Voltar para o Início
     </a>
 </div>

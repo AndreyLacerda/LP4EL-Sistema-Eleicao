@@ -7,3 +7,9 @@
 .sem-candidatura {
     margin-top: 5%;
 }
+
+.imagem-candidato {
+    margin-top: 1rem;
+    max-height: 200px;
+    width: auto;
+}

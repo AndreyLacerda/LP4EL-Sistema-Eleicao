@@ -1,0 +1,35 @@
+﻿@model List<SistemaEleicao.Models.PageModels.VotoConcluido>
+@{
+    ViewData["Title"] = "Eleição - Voto Concluído";
+}
+
+@section Style {
+    <link rel="stylesheet" href="~/css/votacao_concluida.css" />
+}
+
+<div class="text-center">
+    <h1 class="display-4">@ViewBag.EleicaoTitulo - Votação Concluída</h1>
+</div>
+<div class="text-left mensagem-votacao">
+    <h3>Você já concluiu participação nesta eleição. Seus votos foram:</h3>
+</div>
+
+<div class="row justify-content-center">
+    @foreach (var voto in Model)
+    {
+        <div class="text-left votos border col-xs-6">
+            <p><b>Cargo:</b> @voto.Cargo</p>
+            <p><b>Candidato:</b> @voto.Candidato.Nome</p>
+            <p><b>Quantidade de votos seus:</b> @voto.QuantidadeVotos</p>
+        </div>
+    }
+</div>
+<div class="text-center mensagem-apuracao">
+    <h3>Espere a eleição acabar para ver o resultado da apuração!</h3>
+</div>
+
+<div class="text-left">
+    <a type="button" class="btn btn-secondary" href="@Url.Action("MeusVotos", "ListaVotos", new { id = @ViewBag.EleicaoId })">
+        Voltar para a lista de votos
+    </a>
+</div>

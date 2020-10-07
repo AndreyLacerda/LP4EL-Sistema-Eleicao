@@ -76,7 +76,8 @@ namespace SistemaEleicao.Controllers
                                                         .Select(cc => cc.CodCandidato).ToList();
 
                         var candidatos = _db.Candidatos
-                                            .Where(c => !candidaturasRegistradas.Contains(c.CodCandidato))
+                                            .Where(c => !candidaturasRegistradas.Contains(c.CodCandidato) &&
+                                                    c.CodEleicao.ToString().Equals(id))
                                             .Select(c => new {
                                                         CodCandidato = c.CodCandidato,
                                                         Nome = c.Nome

@@ -35,6 +35,7 @@ namespace SistemaEleicao.Controllers
                     var candidatos = _db.Candidatos.Where(c => c.CodEleicao.Equals(eleicaoPainel.CodEleicao)).ToList();
                     eleicaoPainel.Cargos = cargos;
                     eleicaoPainel.Candidatos = candidatos;
+                    ViewBag.MensagemErro = TempData["MensagemErro"] != null ? TempData["MensagemErro"].ToString() : null;
                     return View(eleicaoPainel);
                 }
             }
@@ -88,6 +89,16 @@ namespace SistemaEleicao.Controllers
 
                 if (eleicao.Count() > 0)
                 {
+                    var candidaturas = _db.CargoCandidatos
+                                            .Where(cc => cc.CodEleicao == eleicao.First().CodEleicao)
+                                            .ToList();
+
+                    if (status.Equals("I") && candidaturas.Count() < 2)
+                    {
+                        TempData["MensagemErro"] = "Não é possível iniciar eleições com menos de duas candidaturas.";
+                        return RedirectToAction("PainelEleicao", new { id = eleicao.First().CodEleicao });
+                    };
+
                     eleicao.First().Status = status;
                     _db.Eleicoes.Update(eleicao.First());
                     _db.SaveChanges();
