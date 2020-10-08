@@ -130,24 +130,34 @@ namespace SistemaEleicao.Controllers
                     var cargoExistente = _db.Cargos.Where(c => c.CodCargo.Equals(cargoCriacao.CodCargo));
                     if (cargoExistente.Count() > 0)
                     {
-                        var nomeExistente = _db.Cargos.Where(c => c.Nome.Equals(cargoCriacao.Nome) && c.CodEleicao.Equals(cargoCriacao.CodEleicao));
-                        if (nomeExistente.Count() == 0)
+                        var nomeAtual = _db.Cargos
+                                            .Where(c => c.CodCargo.Equals(cargoCriacao.CodCargo))
+                                            .Select(c => c.Nome)
+                                            .ToList().First();
+
+                        if (!nomeAtual.Equals(cargoCriacao.Nome))
                         {
-                            Cargo cargo = new Cargo();
-                            cargo.CodEleicao = cargoCriacao.CodEleicao;
-                            cargo.Descricao = cargoCriacao.Descricao;
-                            cargo.Nome = cargoCriacao.Nome;
-                            cargo.CodCargo = cargoCriacao.CodCargo;
+                            var nomeExistente = _db.Cargos.Where(c => c.Nome.Equals(cargoCriacao.Nome) && c.CodEleicao.Equals(cargoCriacao.CodEleicao));
+                            if (nomeExistente.Count() > 0)
+                            {
+                                cargoCriacao.Nome = nomeAtual;
+                                ViewBag.MensagemErro = "Já existe um cargo com este nome.";
+                                ViewBag.EleicaoId = cargoCriacao.CodEleicao;
+                                return View("EditarCargo", cargoCriacao);
+                            }
+                         }
 
-                            _db.Cargos.Update(cargo);
-                            _db.SaveChanges();
+                        Cargo cargo = new Cargo();
+                        cargo.CodEleicao = cargoCriacao.CodEleicao;
+                        cargo.Descricao = cargoCriacao.Descricao;
+                        cargo.Nome = cargoCriacao.Nome;
+                        cargo.CodCargo = cargoCriacao.CodCargo;
 
-                            TempData["MensagemSucesso"] = "Alterações salvas com sucesso!";
-                            return RedirectToAction("EditarCargo", new { id = cargoCriacao.CodEleicao, cargoId = cargoCriacao.CodCargo });
-                        }
-                        ViewBag.MensagemErro = "Já existe um cargo com este nome.";
-                        ViewBag.EleicaoId = cargoCriacao.CodEleicao;
-                        return View("EditarCargo", cargoCriacao);
+                        _db.Cargos.Update(cargo);
+                        _db.SaveChanges();
+
+                        TempData["MensagemSucesso"] = "Alterações salvas com sucesso!";
+                        return RedirectToAction("EditarCargo", new { id = cargoCriacao.CodEleicao, cargoId = cargoCriacao.CodCargo });
                     }
                     ViewBag.MensagemErro = "Este cargo não existe.";
                     ViewBag.EleicaoId = cargoCriacao.CodEleicao;
