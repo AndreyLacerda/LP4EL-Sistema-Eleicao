@@ -4,6 +4,12 @@
     padding: 2rem;
 }
 
+.form-checkbox {
+    top: .8rem !important;
+    width: 1.25rem !important;
+    height: 1.25rem !important;
+}
+
 input.input-validation-error {
     background: #FEF1EC;
     border: 1px solid #CD0A0A;

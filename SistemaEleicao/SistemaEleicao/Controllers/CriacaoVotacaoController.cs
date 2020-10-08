@@ -101,45 +101,49 @@ namespace SistemaEleicao.Controllers
             if (idUser != null)
             {
                 var eleicao = _db.Eleicoes
-                                .FromSqlRaw("SELECT COUNT(*) from eleicao where cod_eleicao IN " +
+                                .FromSqlRaw("SELECT * from eleicao where cod_eleicao IN " +
                                             "(select cod_eleicao from usuario_x_eleicao where cod_usuario = '" +
                                             idUser + "' and cod_eleicao = " + cadastrarEleicao.CodEleicao + " and organizador = true)");
                 if (eleicao.Count() > 0)
                 {
-                    var eleicaoEdit = _db.Eleicoes.Where(e => e.Titulo.Equals(cadastrarEleicao.Titulo) && e.CodEleicao.Equals(cadastrarEleicao.CodEleicao));
-                    if (eleicaoEdit.Count() == 0)
+                    var nomeAtual = _db.Eleicoes
+                                                  .Where(e => e.CodEleicao == cadastrarEleicao.CodEleicao)
+                                                  .Select(e => e.Titulo)
+                                                  .ToList()
+                                                  .First();
+                    if (!nomeAtual.Equals(cadastrarEleicao.Titulo))
                     {
-                        if (cadastrarEleicao.ChaveAcesso == null)
+                        var nomeExistente = _db.Eleicoes.Where(e => e.Titulo.Equals(cadastrarEleicao.Titulo)).ToList();
+                        if (nomeExistente.Count() > 0)
                         {
-                            Eleicao eleicaoModelEdit = new Eleicao();
-                            eleicaoModelEdit.CodEleicao = cadastrarEleicao.CodEleicao;
-                            eleicaoModelEdit.Titulo = cadastrarEleicao.Titulo;
-                            eleicaoModelEdit.Descricao = cadastrarEleicao.Descricao;
-                            eleicaoModelEdit.Status = cadastrarEleicao.Status;
-                            eleicaoModelEdit.VotoMultiplo = cadastrarEleicao.VotoMultiplo;
-                            _db.Eleicoes.Update(eleicaoModelEdit);
-                            _db.SaveChanges();
-                            TempData["MensagemSucesso"] = "Eleição alterada com sucesso.";
-                            return RedirectToAction("EditarVotacao", "CriacaoVotacao", new { id = cadastrarEleicao.CodEleicao });
-                        }
-                        else
-                        {
-                            cadastrarEleicao.ChaveAcesso = BCrypt.Net.BCrypt.HashPassword(cadastrarEleicao.ChaveAcesso);
-                            Eleicao eleicaoModel = new Eleicao();
-                            eleicaoModel.ChaveAcesso = cadastrarEleicao.ChaveAcesso;
-                            eleicaoModel.CodEleicao = cadastrarEleicao.CodEleicao;
-                            eleicaoModel.Titulo = cadastrarEleicao.Titulo;
-                            eleicaoModel.Descricao = cadastrarEleicao.Descricao;
-                            eleicaoModel.Status = cadastrarEleicao.Status;
-                            eleicaoModel.VotoMultiplo = cadastrarEleicao.VotoMultiplo;
-                            _db.Eleicoes.Update(eleicaoModel);
-                            _db.SaveChanges();
-                            TempData["MensagemSucesso"] = "Eleição alterada com sucesso.";
-                            return RedirectToAction("EditarVotacao", "CriacaoVotacao", new { id = cadastrarEleicao.CodEleicao });
+                            ViewBag.MensagemErro = "Este título já está sendo utilizado.";
+                            return View("EditarVotacao", cadastrarEleicao);
                         }
                     }
-                    ViewBag.MensagemErro = "Este título já está sendo utilizado.";
-                    return View("EditarVotacao", cadastrarEleicao);
+                    if (cadastrarEleicao.ChaveAcesso == null)
+                    {
+                        var chaveAcessoAtual = _db.Eleicoes
+                                                  .Where(e => e.CodEleicao == cadastrarEleicao.CodEleicao)
+                                                  .Select(e => e.ChaveAcesso)
+                                                  .ToList()
+                                                  .First();
+                        cadastrarEleicao.ChaveAcesso = chaveAcessoAtual;
+                    }
+                    else
+                    {
+                        cadastrarEleicao.ChaveAcesso = BCrypt.Net.BCrypt.HashPassword(cadastrarEleicao.ChaveAcesso);
+                    }
+                    Eleicao eleicaoModel = new Eleicao();
+                    eleicaoModel.ChaveAcesso = cadastrarEleicao.ChaveAcesso;
+                    eleicaoModel.CodEleicao = cadastrarEleicao.CodEleicao;
+                    eleicaoModel.Titulo = cadastrarEleicao.Titulo;
+                    eleicaoModel.Descricao = cadastrarEleicao.Descricao;
+                    eleicaoModel.Status = cadastrarEleicao.Status;
+                    eleicaoModel.VotoMultiplo = cadastrarEleicao.VotoMultiplo;
+                    _db.Eleicoes.Update(eleicaoModel);
+                    _db.SaveChanges();
+                    TempData["MensagemSucesso"] = "Eleição alterada com sucesso.";
+                    return RedirectToAction("EditarVotacao", "CriacaoVotacao", new { id = cadastrarEleicao.CodEleicao });
                 }
                 return RedirectToAction("MinhasEleicoes", "ListaEleicao");
             }

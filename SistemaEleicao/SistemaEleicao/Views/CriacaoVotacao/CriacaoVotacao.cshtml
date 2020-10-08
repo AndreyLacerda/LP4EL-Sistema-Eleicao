@@ -48,9 +48,10 @@
             @Html.TextBoxFor(model => model.ConfirmacaoChave, new { @class = "form-control", @placeholder = "Confirmação da Chave de Acesso", @type = "password", @maxlength = "100" })
             @Html.ValidationMessageFor(model => model.ConfirmacaoChave)
         </div>
-        <div class="form-group">
+        <div class="form-group text-center">
             @Html.LabelFor(model => model.VotoMultiplo, "Votação múltipla?")
-            @Html.CheckBoxFor(model => model.VotoMultiplo, new { @class = "form-control" })
+            <br />
+            @Html.CheckBoxFor(model => model.VotoMultiplo, new { @class = "form-checkbox" })
             @Html.ValidationMessageFor(model => model.VotoMultiplo)
         </div>
         <div class="d-flex justify-content-center">
