@@ -49,19 +49,19 @@
             @Html.ValidationMessageFor(model => model.Descricao)
         </div>
         <div class="form-group">
-            @Html.LabelFor(model => model.ChaveAcesso, "Chave de Acesso* ")
+            @Html.LabelFor(model => model.ChaveAcesso, "Chave de Acesso")
             @Html.TextBoxFor(model => model.ChaveAcesso, new { @class = "form-control", @placeholder = "Chave de Acesso", @type = "password", @maxlength = "100" })
             @Html.ValidationMessageFor(model => model.ChaveAcesso)
         </div>
         <div class="form-group">
-            @Html.LabelFor(model => model.ConfirmacaoChave, "Confirmar Chave de Acesso*")
+            @Html.LabelFor(model => model.ConfirmacaoChave, "Confirmar Chave de Acesso")
             @Html.TextBoxFor(model => model.ConfirmacaoChave, new { @class = "form-control", @placeholder = "Confirmação da Chave de Acesso", @type = "password", @maxlength = "100", @Value = Model.ChaveAcesso })
             @Html.ValidationMessageFor(model => model.ConfirmacaoChave)
         </div>
         <div class="form-group text-center">
             @Html.LabelFor(model => model.VotoMultiplo, "Votação múltipla?")
             <br />
-            @Html.CheckBoxFor(model => model.VotoMultiplo, new { @class = "form-checkbox", @Value = Model.VotoMultiplo, @type="checkbox" })
+            @Html.CheckBoxFor(model => model.VotoMultiplo, new { @class = "form-checkbox", @type="checkbox" })
             @Html.ValidationMessageFor(model => model.VotoMultiplo)
         </div>
         <div class="d-flex justify-content-center">

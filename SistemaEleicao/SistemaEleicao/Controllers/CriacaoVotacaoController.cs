@@ -107,10 +107,10 @@ namespace SistemaEleicao.Controllers
                 if (eleicao.Count() > 0)
                 {
                     var nomeAtual = _db.Eleicoes
-                                                  .Where(e => e.CodEleicao == cadastrarEleicao.CodEleicao)
-                                                  .Select(e => e.Titulo)
-                                                  .ToList()
-                                                  .First();
+                                        .Where(e => e.CodEleicao == cadastrarEleicao.CodEleicao)
+                                        .Select(e => e.Titulo)
+                                        .ToList()
+                                        .First();
                     if (!nomeAtual.Equals(cadastrarEleicao.Titulo))
                     {
                         var nomeExistente = _db.Eleicoes.Where(e => e.Titulo.Equals(cadastrarEleicao.Titulo)).ToList();

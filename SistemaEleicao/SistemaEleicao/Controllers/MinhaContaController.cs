@@ -25,11 +25,23 @@ namespace SistemaEleicao.Controllers
             string idUser = HttpContext.Session.GetString("Id");
             if (idUser != null)
             {
-                var usuario = _db.Usuarios.SingleOrDefault(u => u.Email.Equals(usuarioAtualizacao.Email));
+                var usuario = _db.Usuarios.SingleOrDefault(u => u.CodUsuario.ToString().Equals(idUser));
                 if (usuario != null)
                 {
                     if (BCrypt.Net.BCrypt.Verify(usuarioAtualizacao.SenhaAtual, usuario.Senha))
                     {
+                        if (!usuario.Email.Equals(usuarioAtualizacao.Email))
+                        {
+                            var emailsExistentes = _db.Usuarios
+                                                        .Where(u => u.Email.Equals(usuarioAtualizacao.Email))
+                                                        .Select(u => u.Email)
+                                                        .ToList();
+                            if (emailsExistentes.Count() > 0)
+                            {
+                                ViewBag.MensagemErro = "Este e-mail já está sendo utilizado por outra conta.";
+                                return View("MinhaConta", usuarioAtualizacao);
+                            }
+                        }
                         usuario.Email = usuarioAtualizacao.Email;
                         usuario.Nome = usuarioAtualizacao.Nome;
                         if (!string.IsNullOrEmpty(usuarioAtualizacao.Senha)) usuario.Senha = BCrypt.Net.BCrypt.HashPassword(usuarioAtualizacao.Senha);
@@ -39,22 +51,24 @@ namespace SistemaEleicao.Controllers
                         HttpContext.Session.SetString("Nome", usuario.Nome);
                         HttpContext.Session.SetString("Email", usuario.Email);
 
-                        return RedirectToAction("Index", "Home");
+                        TempData["MensagemSucesso"] = "Alterações salvas com sucesso.";
+                        return RedirectToAction("AtualizarConta");
                     }
+
+                    ViewBag.MensagemErro = "Senha atual incorreta.";
+                    return View("MinhaConta", usuarioAtualizacao);
                 }
-                ViewBag.MensagemErro = "Algo deu errado.";
-                //return View("MinhaConta");
-                return View("MinhaConta", usuarioAtualizacao);
             }
             return RedirectToAction("Login", "Home");
         }
 
-        [Route("atualizar-conta")]
+        [Route("minha-conta")]
         public ActionResult AtualizarConta()
         {
             UsuarioAtualizacao usuarioAtualizacao = new UsuarioAtualizacao();
             usuarioAtualizacao.Nome = HttpContext.Session.GetString("Nome");
             usuarioAtualizacao.Email = HttpContext.Session.GetString("Email");
+            ViewBag.MensagemSucesso = TempData["MensagemSucesso"] != null ? TempData["MensagemSucesso"].ToString() : null;
             return View("MinhaConta", usuarioAtualizacao);
         }
 

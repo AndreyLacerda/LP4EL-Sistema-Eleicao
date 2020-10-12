@@ -29,6 +29,12 @@
             </div>
         }
 
+        @if (@ViewBag.MensagemSucesso != null)
+        {
+            <div class="alert alert-success" role="alert">
+                @ViewBag.MensagemSucesso
+            </div>
+        }
 
         <div class="form-group">
             @Html.LabelFor(model => model.Email, "E-mail*")
@@ -46,17 +52,17 @@
             @Html.ValidationMessageFor(model => model.SenhaAtual)
         </div>
         <div class="form-group">
-            @Html.LabelFor(model => model.Senha, "Senha*")
+            @Html.LabelFor(model => model.Senha, "Senha")
             @Html.TextBoxFor(model => model.Senha, new { @class = "form-control", @placeholder = "Nova Senha", @type = "password", @maxlength = "100" })
             @Html.ValidationMessageFor(model => model.Senha)
         </div>
         <div class="form-group">
-            @Html.LabelFor(model => model.ConfirmacaoSenha, "Confirmar Senha*")
+            @Html.LabelFor(model => model.ConfirmacaoSenha, "Confirmar Senha")
             @Html.TextBoxFor(model => model.ConfirmacaoSenha, new { @class = "form-control", @placeholder = "Confirmação da Nova Senha", @type = "password", @maxlength = "100" })
             @Html.ValidationMessageFor(model => model.ConfirmacaoSenha)
         </div>
         <div class="d-flex justify-content-center">
-            <button type="submit" value="submit" class="btn btn-info">Atualizar</button>
+            <button type="submit" value="submit" class="btn btn-info">Atualizar dados</button>
         </div>
     }
 </div>
